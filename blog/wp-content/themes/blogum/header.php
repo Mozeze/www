@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" dir="<?php bloginfo('text_direction'); ?>" xml:lang="<?php bloginfo('language'); ?>">
     <head>
         <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
-        <title><?php bloginfo('template_url'); ?>
+        <title>
             <?php
                 global $page, $paged;
                 wp_title('|', true, 'right');
