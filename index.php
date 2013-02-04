@@ -2,7 +2,7 @@
 <head><title></title> 
 <meta http-equiv="Content-Type" content="text/html; charset=GBK">
 <script language='javascript' type='text/javascript'> 
-var secs =3; //����ʱ������ 
+var secs =3; 
 var URL ; 
 function Load(url){ 
 URL =url; 

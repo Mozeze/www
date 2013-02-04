@@ -39,6 +39,16 @@
                         }
                     ?>
                 </div>
+                <div class="navigation">
+					<div class="alignleft">
+					<?php previous_post('&laquo; &laquo; %',
+					 '上一篇: ', 'yes'); ?>
+					</div>
+					<div class="alignright">
+					<?php next_post('% &raquo; &raquo; ',
+					 '下一篇: ', 'yes'); ?>
+					</div>
+				</div> <!-- end navigation --> 
             </div>
         </div>
 
