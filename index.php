@@ -45,25 +45,27 @@ require('/blog/wp-blog-header.php');
 		  	background-size: cover;
 		}
 		
-		.index_wrapper {margin: 0 auto; position: relative; height: 70%;width: 1200px;}
+		.index_wrapper {margin: 0 auto; position: relative; height: 70%;min-width: 1080px; min-height:500px;}
 		
 		.index_header {padding: 0px 0 0px 0;}
 		
-		.index_footer {margin: 0 auto; position: relative; width: 1200px;}
-		
-		
+		.index_footer {margin: 0 auto; position: relative; min-width: 1080px;}
 		
 		.index_headerName {
-			color: white;
+			color: gray;
 			float: right;
 			margin-right: 40%;
+			font-size: 25px;
+			margin-top: 20px;
 		}
 		
 		.transbox
 		  {
 		  	  margin-top:-23px;
-			  width:245px;
+			  /*width:245px;*/
+			  width:15%;
 			  height:100%;
+			  margin-left:5%;
 			  background-color:#000000;
 			  /* 针对IE */
 			  filter:alpha(opacity=60);
@@ -73,8 +75,22 @@ require('/blog/wp-blog-header.php');
 			  position:absolute;
 		  }
 		  
+		  .index_middle_left {
+		  	width:5%;
+		  	float: left;
+		  	height:68px;
+		   	background-color:#FFFFFF;
+			  /* 针对IE */
+			  filter:alpha(opacity=60);
+			  /* CSS3标准 */
+			  opacity:0.4;
+			  z-index:-2;
+			  float: left;
+			   position:relative;
+		  }
+		  
 		  .middleOne {
-		  	  width:955px;
+		  	  width:80%;
 		  	  height:68px;
 		  	  background-color:#FFFFFF;
 			  /* 针对IE */
@@ -87,7 +103,10 @@ require('/blog/wp-blog-header.php');
 		  }
 		  
 		  .middleOne1 {
+		  	/*
 		  	  width:245px;
+		  	  */
+		  	  width:15%;
 		  	  height:108px;
 		  	  margin-top:-23px;
 		  	  background-color:#FFFFFF;
@@ -113,11 +132,12 @@ require('/blog/wp-blog-header.php');
 		  
 		  .index_logo {
 		  	  margin-top: 200px;
-		  	  margin-left: 22px;
+		  	  margin-left:6.5%;
+		  	  width: 12%;
 		  }
 		  
 		  .xiuliqinshe {
-		  	 margin-left: -200px;
+		  	 margin-left: -15%;
 		  }
 		  
 		  .middleText {
@@ -138,26 +158,28 @@ require('/blog/wp-blog-header.php');
             	<img alt="Moze" title="Moze" src="/images/logo.png" class="index_logo">
                 
                 <div class="index_headerName">
-				<h1>WWW.SOLEEKISS.COM</h1>
+					<h1>WWW.SOLEEKISS.COM</h1>
 				</div>
                 
             </div>
         </div>
         
         <div class="index_footer">
+        	<div class="index_middle_left"></div>
        		<div class="middleOne1">
        		</div>
        		<img alt="XiuLiQinShe" src="/images/XiuLiQinShe3.png" class="xiuliqinshe">
-            <div class="middleOne"></div>
-			<div class="middleOneImg">
+       		<div class="middleOne"></div>
+       		<div class="middleOneImg">
 				<img alt="Haku" title="Haku" src="/images/Haku.png">
 				<a href="/blog"><img alt="Blog" title="Blog" src="/images/Blog.png"></a>
 				<img alt="Draw" title="Draw" src="/images/Draw.png">
 				<img alt="Moze" title="Moze" src="/images/Moze.png">
 				<a href="http://hi.baidu.com/mooojoy"><img alt="Fish" title="Fish" src="/images/Fish.png"></a>
-			</div>
-			<div>
-			</div>
+       		</div>
+       		<!-- 
+            <div class="middleOne"></div>
+       		 -->
 			<div id="middleTwo" class="middleTwo">
 				<div style="float:right;z-index:999;width:954px;">
 					<span class="middleText" style="width:294px;">Fish</span>
