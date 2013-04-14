@@ -61,6 +61,7 @@ require('/blog/wp-blog-header.php');
 		
 		.transbox
 		  {
+		  	  margin-top:-23px;
 			  width:245px;
 			  height:100%;
 			  background-color:#000000;
@@ -73,29 +74,29 @@ require('/blog/wp-blog-header.php');
 		  }
 		  
 		  .middleOne {
-		  	  width:950px;
+		  	  width:955px;
 		  	  height:68px;
-		  	  margin: 0 auto; 
 		  	  background-color:#FFFFFF;
 			  /* 针对IE */
-			  filter:alpha(opacity=70);
+			  filter:alpha(opacity=60);
 			  /* CSS3标准 */
-			  opacity:0.6;
-			  z-index:-1;
+			  opacity:0.4;
+			  z-index:-2;
 			  float: right;
+			   position:relative;
 		  }
 		  
 		  .middleOne1 {
 		  	  width:245px;
 		  	  height:108px;
 		  	  margin-top:-23px;
-		  	  float:left;
 		  	  background-color:#FFFFFF;
 			  /* 针对IE */
 			  filter:alpha(opacity=20);
 			  /* CSS3标准 */
 			  opacity:0.05;
-			  z-index:-1;
+			  z-index:3;
+		  	  float:left;
 		  }
 		  
 		  .middleTwo {
@@ -103,6 +104,12 @@ require('/blog/wp-blog-header.php');
 		  	  height:38px;
 		  	  float:right;
 		   }
+		   
+		   .middleOneImg {
+				margin-top: -68px;
+				float: right;
+				z-index: 2;
+			}
 		  
 		  .index_logo {
 		  	  margin-top: 200px;
@@ -110,7 +117,7 @@ require('/blog/wp-blog-header.php');
 		  }
 		  
 		  .xiuliqinshe {
-		  	 margin-left: -246px;
+		  	 margin-left: -200px;
 		  }
 		  
 		  .middleText {
@@ -121,14 +128,14 @@ require('/blog/wp-blog-header.php');
 			float: right;
 			text-align:center;
 		}
-		  
+		
 		</style>
 	</head>
 	<body>
         <div class="index_wrapper">
             <div class="index_header clear">
             	<div class="transbox"></div>
-            	<img alt="Moze" src="/images/logo.png" class="index_logo">
+            	<img alt="Moze" title="Moze" src="/images/logo.png" class="index_logo">
                 
                 <div class="index_headerName">
 				<h1>WWW.SOLEEKISS.COM</h1>
@@ -140,14 +147,14 @@ require('/blog/wp-blog-header.php');
         <div class="index_footer">
        		<div class="middleOne1">
        		</div>
-       		<img alt="XiuLiQinShe" src="/images/XiuLiQinShe2.png" class="xiuliqinshe">
-            <div class="middleOne clear"></div>
-			<div style="z-index:999;margin-top: -68px;float: right;">
-				<img alt="Haku" src="/images/Haku.png">
-				<img alt="Blog" src="/images/Blog.png">
-				<img alt="Draw" src="/images/Draw.png">
-				<img alt="Moze" src="/images/Moze.png">
-				<img alt="Fish" src="/images/Fish.png">
+       		<img alt="XiuLiQinShe" src="/images/XiuLiQinShe3.png" class="xiuliqinshe">
+            <div class="middleOne"></div>
+			<div class="middleOneImg">
+				<img alt="Haku" title="Haku" src="/images/Haku.png">
+				<a href="/blog"><img alt="Blog" title="Blog" src="/images/Blog.png"></a>
+				<img alt="Draw" title="Draw" src="/images/Draw.png">
+				<img alt="Moze" title="Moze" src="/images/Moze.png">
+				<a href="http://hi.baidu.com/mooojoy"><img alt="Fish" title="Fish" src="/images/Fish.png"></a>
 			</div>
 			<div>
 			</div>
