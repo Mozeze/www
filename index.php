@@ -38,18 +38,18 @@ require('/blog/wp-blog-header.php');
 		?>
 		<style type="text/css">
 		body { 
-			background: url(/images/index_source_2013.jpg) no-repeat center center fixed; 
+			background: url(/images/index/body_background_201304.jpg) no-repeat center center fixed; 
 		 	-webkit-background-size: cover;
 		  	-moz-background-size: cover;
 		  	-o-background-size: cover;
 		  	background-size: cover;
 		}
 		
-		.index_wrapper {margin: 0 auto; position: relative; height: 70%;min-width: 1080px; min-height:500px;}
+		.index_wrapper {margin: 0 auto; position: relative; height: 62%;min-width: 1200px; min-height:500px;}
 		
 		.index_header {padding: 0px 0 0px 0;}
 		
-		.index_footer {margin: 0 auto; position: relative; min-width: 1080px;}
+		.index_footer {margin: 0 auto; position: relative; min-width: 1200px;}
 		
 		.index_headerName {
 			color: gray;
@@ -61,11 +61,13 @@ require('/blog/wp-blog-header.php');
 		
 		.transbox
 		  {
-		  	  margin-top:-23px;
-			  /*width:245px;*/
+		  	  margin-top:-20px;
+			  /*
+			  width:245px;
+			  */
 			  width:15%;
 			  height:100%;
-			  margin-left:5%;
+			  margin-left:10%;
 			  background-color:#000000;
 			  /* 针对IE */
 			  filter:alpha(opacity=60);
@@ -76,7 +78,7 @@ require('/blog/wp-blog-header.php');
 		  }
 		  
 		  .index_middle_left {
-		  	width:5%;
+		  	width:10%;
 		  	float: left;
 		  	height:68px;
 		   	background-color:#FFFFFF;
@@ -90,7 +92,7 @@ require('/blog/wp-blog-header.php');
 		  }
 		  
 		  .middleOne {
-		  	  width:80%;
+		  	  width:75%;
 		  	  height:68px;
 		  	  background-color:#FFFFFF;
 			  /* 针对IE */
@@ -99,7 +101,7 @@ require('/blog/wp-blog-header.php');
 			  opacity:0.4;
 			  z-index:-2;
 			  float: right;
-			   position:relative;
+			  position:relative;
 		  }
 		  
 		  .middleOne1 {
@@ -108,7 +110,7 @@ require('/blog/wp-blog-header.php');
 		  	  */
 		  	  width:15%;
 		  	  height:108px;
-		  	  margin-top:-23px;
+		  	  margin-top:-20px;
 		  	  background-color:#FFFFFF;
 			  /* 针对IE */
 			  filter:alpha(opacity=20);
@@ -118,6 +120,22 @@ require('/blog/wp-blog-header.php');
 		  	  float:left;
 		  }
 		  
+		  .middleTwoCenter {
+			  width:15%;
+			  margin-left:10%;
+			  height:48px;
+			  color:white;
+			  text-align:center;
+			  font-size:20px;
+			  background-color:#000000;
+			  /* 针对IE */
+			  filter:alpha(opacity=60);
+			  /* CSS3标准 */
+			  opacity:0.3;
+			  z-index:-1;
+			  position:absolute;
+		  }
+		  
 		  .middleTwo {
 		  	  width:100%;
 		  	  height:38px;
@@ -125,37 +143,86 @@ require('/blog/wp-blog-header.php');
 		   }
 		   
 		   .middleOneImg {
-				margin-top: -68px;
 				float: right;
 				z-index: 2;
+				height: 68px;
+				margin-top: -68px;
 			}
+			.middleOneImg img{
+				margin-right: 15px;
+			}
+			
+		   .middleTwoImg {
+				z-index: 2;
+				margin-left:11.4%;
+				width:15%;
+			}
+			
+		   .middleTwoImg img{
+		   	     margin-top:10px;
+				width:15%;
+			}
+			
 		  
 		  .index_logo {
 		  	  margin-top: 200px;
-		  	  margin-left:6.5%;
+		  	  margin-left:11.5%;
 		  	  width: 12%;
 		  }
 		  
 		  .xiuliqinshe {
-		  	 margin-left: -15%;
+		  	 width: 12%;
+		  	 margin-left: -13.5%;
 		  }
 		  
 		  .middleText {
 			font-size:25px;
 			height:68px;
-			width:130px;
+			width:120px;
 			color:white;
 			float: right;
 			text-align:center;
+			margin-top: -43px;
+		}
+		
+		.middleTwoText {
+		 float:right;z-index:999;width:954px;
+		 /* 针对IE */
+		  filter:alpha(opacity=60);
+		  /* CSS3标准 */
+		  opacity:0.3;
+		  z-index:-1;
+		}
+		
+		.middleTwoText span {
+			margin-right: 15px;
 		}
 		
 		</style>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript">
+		var images = ['/images/index/body_background_201304.jpg', '/images/index/body_background_201304_1.jpg',
+		      		'/images/index/body_background_201304_2.jpg'];
+		var i = 0;
+		/*setInterval(function(){
+		    $('body').css('background-image', function() {
+		        if (i >= images.length) {
+		            i=0;
+		        }
+		        return 'url(' + images[i++] + ')'; 
+		    });
+		}, 5000);*/
+
+		function bodyBackImage(index) {
+			$('body').css('background-image', 'url(' + images[index] + ')');
+		}
+		</script>
 	</head>
 	<body>
         <div class="index_wrapper">
             <div class="index_header clear">
             	<div class="transbox"></div>
-            	<img alt="Moze" title="Moze" src="/images/logo.png" class="index_logo">
+            	<img alt="Moze" title="Moze" src="/images/index/logo.png" class="index_logo">
                 
                 <div class="index_headerName">
 					<h1>WWW.SOLEEKISS.COM</h1>
@@ -166,22 +233,27 @@ require('/blog/wp-blog-header.php');
         
         <div class="index_footer">
         	<div class="index_middle_left"></div>
-       		<div class="middleOne1">
+       		<div class="middleOne1"></div>
+       		<img alt="XiuLiQinShe" src="/images/index/XiuLiQinShe.png" class="xiuliqinshe">
+       		<div class="middleOne">
        		</div>
-       		<img alt="XiuLiQinShe" src="/images/XiuLiQinShe3.png" class="xiuliqinshe">
-       		<div class="middleOne"></div>
        		<div class="middleOneImg">
-				<img alt="Haku" title="Haku" src="/images/Haku.png">
-				<a href="/blog"><img alt="Blog" title="Blog" src="/images/Blog.png"></a>
-				<img alt="Draw" title="Draw" src="/images/Draw.png">
-				<img alt="Moze" title="Moze" src="/images/Moze.png">
-				<a href="http://hi.baidu.com/mooojoy"><img alt="Fish" title="Fish" src="/images/Fish.png"></a>
+				<img alt="Haku" title="Haku" src="/images/index/Haku.png" onclick="bodyBackImage(0)">
+				<img alt="Blog" title="Blog" src="/images/index/Blog.png">
+				<img alt="Draw" title="Draw" src="/images/index/Draw.png" onclick="bodyBackImage(1)">
+				<img alt="Moze" title="Moze" src="/images/index/Moze.png" onclick="bodyBackImage(2)">
+				<a href="http://hi.baidu.com/mooojoy"><img alt="Fish" title="Fish" src="/images/index/Fish.png"></a>
        		</div>
-       		<!-- 
-            <div class="middleOne"></div>
-       		 -->
 			<div id="middleTwo" class="middleTwo">
-				<div style="float:right;z-index:999;width:954px;">
+				<div class="middleTwoCenter"></div>
+	       		<div class="middleTwoImg">
+					<img alt="Flicker" title="Flicker" src="/images/index/flicker.png">
+					<img alt="DouBan" title="DouBan" src="/images/index/douban.png">
+					<img alt="WeiXin" title="WeiXin" src="/images/index/weixin.png">
+					<img alt="MeiKong" title="Meikong" src="/images/index/meikong.png">
+					<img alt="WeiBo" title="WeiBo" src="/images/index/weibo.png">
+	       		</div>
+				<div class="middleTwoText">
 					<span class="middleText" style="width:294px;">Fish</span>
 					<span class="middleText" style="width:150px;">Moze</span>
 					<span class="middleText">Draw</span>
