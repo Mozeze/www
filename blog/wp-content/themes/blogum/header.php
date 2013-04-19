@@ -35,24 +35,43 @@
         <?php wp_head(); ?>
 	</head>
 	<body>
-		<div style="width: 100%;">
-            		<div style="height: 20px;width:100%;background: url('<?php bloginfo('template_url'); ?>/images/header_1x21.png');float:left;"></div>
+		<div>
+			<div style="width:100%;background: url('<?php bloginfo('template_url'); ?>/images/list/header_top_1x35.png');float:left;">
+				<div class="wrapper_header" >
+					<?php get_search_form(); ?>
+					<div style="float: left;font-family: 黑体;color: white;font-size: 14px;margin-left:600px;margin-top:10px;">
+						<span style="margin-right: 20px;">大象岛。</span>
+						<span style="margin-right: 20px;">茉泽映画。</span>
+						<span>浮在空中的鱼群。</span>
+					</div>
+				</div>
+			</div>
+            <div style="height:6px;width:100%;background: url('<?php bloginfo('template_url'); ?>/images/list/header_top_371x6.png');float:left;"></div>
         </div>
         <div class="wrapper">
             <div class="header clear">
-            	
             	<!-- 
                 <h1><a href="<?php bloginfo('home'); ?>">&mdash; <?php bloginfo('name'); ?></a></h1>
-                <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/logo_110x145.png" /></a>
-            	 -->
                 <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/logo_111x160.png" /></a>
+            	 -->
+                <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/list/logo_118x146.png" /></a>
+                <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/list/soleekiss.png" /></a>
                 
                 <div class="headerName">
-				<h1><?php bloginfo('name'); ?></h1>
+					<img src="<?php bloginfo('template_url'); ?>/images/list/blog_name_239x52.png" />
+				</div>
+                <div class="linkImg">
+					<img src="<?php bloginfo('template_url'); ?>/images/list/link_274x150.png" />
 				</div>
                 <?php wp_nav_menu(array('menu' => 'Header', 'theme_location' => 'Header', 'depth' => 1, 'container_class' => 'menu')); ?>
 
-                <?php get_search_form(); ?>
+                <div class="share">
+					<img alt="Flicker" title="Flicker" src="/images/index/flicker.png">
+					<img alt="DouBan" title="DouBan" src="/images/index/douban.png">
+					<img alt="WeiXin" title="WeiXin" src="/images/index/weixin.png">
+					<img alt="MeiKong" title="Meikong" src="/images/index/meikong.png">
+					<img alt="WeiBo" title="WeiBo" src="/images/index/weibo.png">
+				</div>
                 
             </div>
             <div class="middle clear">

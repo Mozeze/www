@@ -1,26 +1,17 @@
 <div class="sidebar">
 	
 	<div class="widget">
-            <h3>&#x6D6E;&#x5728;&#x7A7A;&#x4E2D;&#x7684;&#x9C7C;&#x7FA4;</h3>
+            <h3>About Soleekiss</h3>
             <div class="widget_body">
-                <img alt="Who is Autorun?" src="http://img.bulaoge.net/usrd/201104/034/813/files/user_photo.jpg?timestamp=1302503474">
+                <img alt="Who is Autorun?" width="225px;" src="<?php bloginfo('template_url'); ?>/images/list/about_new.png">
             </div>
-            <table id="blgInfo" cellspacing="0">
-			<tbody>
-			<tr>
-			<td valign="top" style="padding-left: 10px;"><a href="/?toosummer"><span class="bulaoge-title">浮在空中的鱼群</span></a> <br>回忆若可下酒，<br>
-			往事便可做一场宿醉。<br>
-			<br>
-			鱼群主窝  <br>
-			 <a href="http://hi.baidu.com/夏小茉" target="_blank">[浮在空中的鱼群]</a> <br>
-			照相本子偏站<br>
-			  <a href="http://moze.poco.cn" target="_blank">[夏茉的光泽]</a> 也许轻浮<br>
-			    也许沉没<br>
-			<br>
-			找茉崽：toosummer@126.com<br>
-			</td>
-			</tr>
-			</tbody></table>
+            <div class="blgInfo">
+				<div style="font-size: 13px;">白姑娘袖里的那条青蛇有五百年了</div>
+				<div>可以叫我白爷，老夏、阿白</div>
+				<div>弥白清欢 茉泽如夏</div>
+				<div>摄影师/插画师: soleekiss</div>
+				<div>e-Mail: soleekiss@gmail.com</div>
+			</div>
     </div>
     
     <?php if ( !dynamic_sidebar('Sidebar') ) : ?>

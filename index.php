@@ -45,7 +45,7 @@ require('/blog/wp-blog-header.php');
 		  	background-size: cover;
 		}
 		
-		.index_wrapper {margin: 0 auto; position: relative; height: 62%;min-width: 1200px; min-height:500px;}
+		.index_wrapper {margin: 0 auto; position: relative; height: 60%;min-width: 1200px;min-height: 350px;}
 		
 		.index_header {padding: 0px 0 0px 0;}
 		
@@ -88,7 +88,7 @@ require('/blog/wp-blog-header.php');
 			  opacity:0.4;
 			  z-index:-2;
 			  float: left;
-			   position:relative;
+			  position:relative;
 		  }
 		  
 		  .middleOne {
@@ -165,7 +165,7 @@ require('/blog/wp-blog-header.php');
 			
 		  
 		  .index_logo {
-		  	  margin-top: 200px;
+		  	  margin-top: 11%;
 		  	  margin-left:11.5%;
 		  	  width: 12%;
 		  }
