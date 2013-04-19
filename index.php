@@ -239,7 +239,7 @@ require('/blog/wp-blog-header.php');
        		</div>
        		<div class="middleOneImg">
 				<img alt="Haku" title="Haku" src="/images/index/Haku.png" onclick="bodyBackImage(0)">
-				<img alt="Blog" title="Blog" src="/images/index/Blog.png">
+				<a href="/blog"><img alt="Blog" title="Blog" src="/images/index/Blog.png"></a>
 				<img alt="Draw" title="Draw" src="/images/index/Draw.png" onclick="bodyBackImage(1)">
 				<img alt="Moze" title="Moze" src="/images/index/Moze.png" onclick="bodyBackImage(2)">
 				<a href="http://hi.baidu.com/mooojoy"><img alt="Fish" title="Fish" src="/images/index/Fish.png"></a>
