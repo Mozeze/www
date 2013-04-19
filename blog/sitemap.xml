@@ -1,86 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="http://www.mozeze.com/blog/wp-content/plugins/google-sitemap-generator/sitemap.xsl"?><!-- generator="wordpress/3.5.1" -->
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="http://zengbailan.gicp.net/blog/wp-content/plugins/google-sitemap-generator/sitemap.xsl"?><!-- generator="wordpress/3.5.1" -->
 <!-- sitemap-generator-url="http://www.arnebrachhold.de" sitemap-generator-version="3.2.9" -->
-<!-- generated-on="2013 年 2 月 4 日 pm 12:57" -->
+<!-- generated-on="2013 年 3 月 27 日 am 8:26" -->
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">	<url>
-		<loc>http://www.mozeze.com/blog/</loc>
+		<loc>http://zengbailan.gicp.net/blog/</loc>
 		<lastmod>2013-02-01T14:15:46+00:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1.0</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=56</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=56</loc>
 		<lastmod>2013-02-01T14:15:46+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=50</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=50</loc>
 		<lastmod>2013-01-30T15:01:15+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.7</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=47</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=47</loc>
 		<lastmod>2013-01-30T14:59:23+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=42</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=42</loc>
 		<lastmod>2013-01-30T14:50:33+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=40</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=40</loc>
 		<lastmod>2013-01-30T14:45:30+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=38</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=38</loc>
 		<lastmod>2013-01-30T14:41:58+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=36</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=36</loc>
 		<lastmod>2013-01-30T14:37:59+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=34</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=34</loc>
 		<lastmod>2013-01-30T14:36:32+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=29</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=29</loc>
 		<lastmod>2013-01-30T14:16:41+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=24</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=24</loc>
 		<lastmod>2013-01-30T14:09:58+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=6</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=6</loc>
 		<lastmod>2013-01-30T04:19:17+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.3</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?p=10</loc>
+		<loc>http://zengbailan.gicp.net/blog/?p=10</loc>
 		<lastmod>2013-01-30T04:18:36+00:00</lastmod>
 		<changefreq>monthly</changefreq>
 		<priority>0.2</priority>
 	</url>
 	<url>
-		<loc>http://www.mozeze.com/blog/?page_id=2</loc>
+		<loc>http://zengbailan.gicp.net/blog/?page_id=2</loc>
 		<lastmod>2013-01-07T09:25:58+00:00</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.6</priority>
