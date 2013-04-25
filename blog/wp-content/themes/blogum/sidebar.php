@@ -3,7 +3,7 @@
 	<div class="widget">
             <h3>About Soleekiss</h3>
             <div class="widget_body">
-                <img alt="Who is Autorun?" width="225px;" src="<?php bloginfo('template_url'); ?>/images/list/about_new.png">
+                <img alt="Who is Autorun?" width="225px;" src="<?php bloginfo('template_url'); ?>/images/sidebar/about_new.png">
             </div>
             <div class="blgInfo">
 				<div style="font-size: 13px;">白姑娘袖里的那条青蛇有五百年了</div>

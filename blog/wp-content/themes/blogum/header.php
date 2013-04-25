@@ -16,11 +16,7 @@
         </title>
         <meta http-equiv="Content-language" content="<?php bloginfo('language'); ?>" />
         <link rel="profile" href="http://gmpg.org/xfn/11" />
-        <!-- ----
-        <link rel="shortcut icon" href="<?php bloginfo('template_url'); ?>/images/favico.ico" type="image/x-icon" />
-        <link rel="shortcut icon" href="<?php bloginfo('template_url'); ?>/images/logo_16x20.png" type="image/x-icon" />
-         -->
-        <link rel="shortcut icon" href="<?php bloginfo('template_url'); ?>/images/logo_16x16.jpg" type="image/x-icon" />
+        <link rel="shortcut icon" href="<?php bloginfo('template_url'); ?>/images/logo_16x16.png" type="image/x-icon" />
         <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo('stylesheet_url'); ?>" />
         <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo('template_url'); ?>/pagenavi-css.css" />
         <!--[if IE]><link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo('template_url'); ?>/ie.css" /><![endif]-->
@@ -36,32 +32,36 @@
 	</head>
 	<body>
 		<div>
-			<div style="width:100%;background: url('<?php bloginfo('template_url'); ?>/images/list/header_top_1x35.png');float:left;">
+			<div style="width:100%;background: url('<?php bloginfo('template_url'); ?>/images/header/header_top_1x35.png');float:left;">
 				<div class="wrapper_header" >
 					<?php get_search_form(); ?>
-					<div style="float: left;font-family: 黑体;color: white;font-size: 14px;margin-left:600px;margin-top:10px;">
-						<span style="margin-right: 20px;">大象岛。</span>
-						<span style="margin-right: 20px;">茉泽映画。</span>
+					<div style="float: left;font-family: 黑体;color: white;font-size: 14px;margin-left:570px;margin-top:10px;">
+						<span style="margin-right: 40px;">大象岛。</span>
+						<span style="margin-right: 30px;">茉泽映画。</span>
 						<span>浮在空中的鱼群。</span>
 					</div>
 				</div>
 			</div>
-            <div style="height:6px;width:100%;background: url('<?php bloginfo('template_url'); ?>/images/list/header_top_371x6.png');float:left;"></div>
+            <div style="height:6px;width:100%;background: url('<?php bloginfo('template_url'); ?>/images/header/header_top_371x6.png');float:left;"></div>
         </div>
         <div class="wrapper">
             <div class="header clear">
-            	<!-- 
-                <h1><a href="<?php bloginfo('home'); ?>">&mdash; <?php bloginfo('name'); ?></a></h1>
-                <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/logo_111x160.png" /></a>
-            	 -->
-                <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/list/logo_118x146.png" /></a>
-                <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/list/soleekiss.png" /></a>
+                <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/header/logo_118x146.png" /></a>
+                <a href="<?php bloginfo('home'); ?>" title="Go Home"><img src="<?php bloginfo('template_url'); ?>/images/header/soleekiss.png" /></a>
                 
                 <div class="headerName">
-					<img src="<?php bloginfo('template_url'); ?>/images/list/blog_name_239x52.png" />
+					<img src="<?php bloginfo('template_url'); ?>/images/header/blog_name_239x52_2.png" />
 				</div>
                 <div class="linkImg">
-					<img src="<?php bloginfo('template_url'); ?>/images/list/link_274x150.png" />
+                	<div class="linkImgElephant">
+						<img src="<?php bloginfo('template_url'); ?>/images/header/elephant.png" />
+                	</div>
+                	<div class="linkImgMoze">
+						<img src="<?php bloginfo('template_url'); ?>/images/header/moze.png" />
+					</div>
+					<div class="linkImgFish">
+						<img src="<?php bloginfo('template_url'); ?>/images/header/fish_3.png" />
+					</div>
 				</div>
                 <?php wp_nav_menu(array('menu' => 'Header', 'theme_location' => 'Header', 'depth' => 1, 'container_class' => 'menu')); ?>
 

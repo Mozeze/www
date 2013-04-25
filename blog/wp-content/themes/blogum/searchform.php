@@ -4,10 +4,7 @@
 	</div>
     <form method="get" id="searchform" action="<?php bloginfo('url'); ?>">
         <fieldset>
-            <input name="s" type="text" value="search" />
-            <!-- 
-             onfocus="if(this.value=='search') this.value='';" onblur="if(this.value=='') this.value='search';"
-             -->
+            <input name="s" type="text" value="search" onfocus="if(this.value=='search') this.value='';" onblur="if(this.value=='') this.value='search';" />
             <button type="submit" title="Run Search"></button>
         </fieldset>
     </form>

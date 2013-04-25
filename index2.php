@@ -45,7 +45,7 @@ require('/blog/wp-blog-header.php');
 		  	background-size: cover;
 		}
 		
-		.index_wrapper {margin: 0 auto; position: relative; height: 60%;min-width: 1200px;min-height:500px;}
+		.index_wrapper {margin: 0 auto; position: relative; height: 62%;min-width: 1200px; min-height:500px;}
 		
 		.index_header {padding: 0px 0 0px 0;}
 		
@@ -88,7 +88,7 @@ require('/blog/wp-blog-header.php');
 			  opacity:0.4;
 			  z-index:-2;
 			  float: left;
-			  position:relative;
+			   position:relative;
 		  }
 		  
 		  .middleOne {
@@ -146,34 +146,22 @@ require('/blog/wp-blog-header.php');
 				float: right;
 				z-index: 2;
 				height: 68px;
-				/*margin-top: -68px;*/
-				margin-top: -5%;
+				margin-top: -68px;
 			}
+			
 			.middleOneImg img{
 				margin-right: 15px;
 			}
-			
-		   .middleTwoImg {
-				z-index: 2;
-				margin-left:11.4%;
-				width:15%;
-			}
-			
-		   .middleTwoImg img{
-		   	     margin-top:10px;
-				width:15%;
-			}
-			
 		  
 		  .index_logo {
-		  	  margin-top: 11%;
+		  	  margin-top: 200px;
 		  	  margin-left:11.5%;
 		  	  width: 12%;
 		  }
 		  
 		  .xiuliqinshe {
-		  	 width: 12%;
-		  	 margin-left: -13.5%;
+		  	 width: 10%;
+		  	 margin-left: -12.5%;
 		  }
 		  
 		  .middleText {
@@ -183,16 +171,10 @@ require('/blog/wp-blog-header.php');
 			color:white;
 			float: right;
 			text-align:center;
-			margin-top: -5%;
 		}
 		
 		.middleTwoText {
 		 float:right;z-index:999;width:954px;
-		 /* 针对IE */
-		  filter:alpha(opacity=60);
-		  /* CSS3标准 */
-		  opacity:0.3;
-		  z-index:-1;
 		}
 		
 		.middleTwoText span {
@@ -240,21 +222,17 @@ require('/blog/wp-blog-header.php');
        		</div>
        		<div class="middleOneImg">
 				<img alt="Haku" title="Haku" src="/images/index/Haku.png" onclick="bodyBackImage(0)">
-				<a href="/blog"><img alt="Blog" title="Blog" src="/images/index/Blog.png"></a>
+				<img alt="Blog" title="Blog" src="/images/index/Blog.png">
 				<img alt="Draw" title="Draw" src="/images/index/Draw.png" onclick="bodyBackImage(1)">
 				<img alt="Moze" title="Moze" src="/images/index/Moze.png" onclick="bodyBackImage(2)">
 				<a href="http://hi.baidu.com/mooojoy"><img alt="Fish" title="Fish" src="/images/index/Fish.png"></a>
+				<!-- 
+				
+				 -->
        		</div>
 			<div id="middleTwo" class="middleTwo">
-				<div class="middleTwoCenter"></div>
-	       		<div class="middleTwoImg">
-					<img alt="Flicker" title="Flicker" src="/images/index/flicker.png">
-					<img alt="DouBan" title="DouBan" src="/images/index/douban.png">
-					<img alt="WeiXin" title="WeiXin" src="/images/index/weixin.png">
-					<img alt="MeiKong" title="Meikong" src="/images/index/meikong.png">
-					<img alt="WeiBo" title="WeiBo" src="/images/index/weibo.png">
-	       		</div>
-				<div class="middleTwoText">
+				<div class="middleTwoCenter">[Share Image]</div>
+				<div class="middleTwoText" style="">
 					<span class="middleText" style="width:294px;">Fish</span>
 					<span class="middleText" style="width:150px;">Moze</span>
 					<span class="middleText">Draw</span>

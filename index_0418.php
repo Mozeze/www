@@ -45,7 +45,7 @@ require('/blog/wp-blog-header.php');
 		  	background-size: cover;
 		}
 		
-		.index_wrapper {margin: 0 auto; position: relative; height: 60%;min-width: 1200px;min-height:500px;}
+		.index_wrapper {margin: 0 auto; position: relative; height: 60%;min-width: 1200px;min-height: 350px;}
 		
 		.index_header {padding: 0px 0 0px 0;}
 		
