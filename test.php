@@ -1,9 +1,27 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>Testing</title>
-	</head>
-	<body>
-		<iframe src="http://zengbailan.gicp.net" scrolling="no" frameborder="0" width="100%" height="700px;"></iframe>
-	</body>
+<html> 
+<head><title></title> 
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<script language='javascript' type='text/javascript'> 
+var secs =3; 
+var URL ; 
+function Load(url){ 
+URL =url; 
+for(var i=secs;i>=0;i--) 
+{ 
+window.setTimeout('doUpdate(' + i + ')', (secs-i) * 1000); 
+} 
+} 
+function doUpdate(num) 
+{ 
+document.getElementById('ShowDiv').innerHTML = 'Go Test Evn, '+num; 
+if(num == 0) { window.location=URL; } 
+} 
+</script> 
+</head> 
+<body> 
+<div id="ShowDiv"></div> 
+<script language="javascript"> 
+Load("http://zengbailan.gicp.net"); 
+</script> 
+</body> 
 </html>
