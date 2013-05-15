@@ -1,9 +1,8 @@
 <?php
 $params = array(
-	'short_name'	=>	$this->shortName,
-	'remote_auth'	=>	$this->remoteAuth($this->userData()),
+	'jwt'	=>	$this->jwt(),
 );
-$settingsUrl = 'http://' . self::DOMAIN.'/settings/?' . http_build_query($params);
+$settingsUrl = 'http://' . self::DOMAIN . '/settings/?' . http_build_query($params, null, '&');
 ?>
 <link rel="stylesheet" href="<?php echo $this->pluginDirUrl; ?>styles.css" type="text/css" />
 

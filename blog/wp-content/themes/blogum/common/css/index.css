@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 
 body {
-	background: url(/images/index/body_background_201304.jpg) no-repeat
+	background: url(/common/images/index/body_background_201304.jpg) no-repeat
 		center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;

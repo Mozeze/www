@@ -28,19 +28,41 @@
 		</tr>
 		<tr valign="top">
 			<th scope="row">本地数据备份</th>
-			<td><label><input type="checkbox" name="duoshuo_cron_sync_enabled" value="1" <?php if (get_option('duoshuo_cron_sync_enabled')) echo ' checked="checked"';?>/>定时从多说备份评论到本地</label></td>
+			<td>
+				<input type="hidden" name="duoshuo_cron_sync_enabled" value="0">
+				<label><input type="checkbox" name="duoshuo_cron_sync_enabled" value="1" <?php if (get_option('duoshuo_cron_sync_enabled')) echo ' checked="checked"';?>/>定时从多说备份评论到本地</label></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row">SEO优化</th>
-			<td><label><input type="checkbox" name="duoshuo_seo_enabled" value="1" <?php if (get_option('duoshuo_seo_enabled')) echo ' checked="checked"';?>/>搜索引擎爬虫访问网页时，显示静态HTML评论</label></td>
+			<td>
+				<input type="hidden" name="duoshuo_seo_enabled" value="0">
+				<label><input type="checkbox" name="duoshuo_seo_enabled" value="1" <?php if (get_option('duoshuo_seo_enabled')) echo ' checked="checked"';?>/>搜索引擎爬虫访问网页时，显示静态HTML评论</label></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row">Pingback和Trackback</th>
+			<td>
+				<input type="hidden" name="duoshuo_sync_pingback_and_trackback" value="0">
+				<label><input type="checkbox" name="duoshuo_sync_pingback_and_trackback" value="1" <?php if (get_option('duoshuo_sync_pingback_and_trackback')) echo ' checked="checked"';?>/>将接收到的Pingback和Trackback同步到多说</label></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row">脚本后置</th>
+			<td>
+				<input type="hidden" name="duoshuo_postpone_print_scripts" value="0">
+				<label><input type="checkbox" name="duoshuo_postpone_print_scripts" value="1" <?php if (get_option('duoshuo_postpone_print_scripts')) echo ' checked="checked"';?> />在网页底部才插入多说核心脚本embed.js</label></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row">评论数修正</th>
-			<td><label><input type="checkbox" name="duoshuo_cc_fix" value="1" <?php if (get_option('duoshuo_cc_fix')) echo ' checked="checked"';?> />AJAX加载文章的评论数</label></td>
+			<td>
+				<input type="hidden" name="duoshuo_cc_fix" value="0">
+				<label><input type="checkbox" name="duoshuo_cc_fix" value="1" <?php if (get_option('duoshuo_cc_fix')) echo ' checked="checked"';?> />AJAX加载文章的评论数</label>
+				<p class="description">如果你的主题模板没有显示评论数，或者没有按照WordPress的标准，你可能需要修改模板。参见：<a href="http://dev.duoshuo.com/docs/50d7ecc6b2dcd51d2f0002e7">WordPress主题中的文章评论数</a></p>
+			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row">社交帐号登录</th>
-			<td><label><input type="checkbox" name="duoshuo_social_login_enabled" value="1" <?php if (get_option('duoshuo_social_login_enabled')) echo ' checked="checked"';?>/>允许用社交帐号登录WordPress</label></td>
+			<td>
+				<input type="hidden" name="duoshuo_social_login_enabled" value="0">
+				<label><input type="checkbox" name="duoshuo_social_login_enabled" value="1" <?php if (get_option('duoshuo_social_login_enabled')) echo ' checked="checked"';?>/>允许用社交帐号登录WordPress</label></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row">评论框前缀</th>
@@ -52,7 +74,9 @@
 		</tr>
 		<tr valign="top">
 			<th scope="row">调试开关</th>
-			<td><label><input type="checkbox" name="duoshuo_debug" value="1" <?php if (get_option('duoshuo_debug')) echo ' checked="checked"';?>/>Debug调试开关</label><br /><span class="description">仅在出现故障向多说汇报错误信息时打开</span></td>
+			<td>
+				<input type="hidden" name="duoshuo_debug" value="0">
+				<label><input type="checkbox" name="duoshuo_debug" value="1" <?php if (get_option('duoshuo_debug')) echo ' checked="checked"';?>/>Debug调试开关</label><br /><span class="description">仅在出现故障向多说汇报错误信息时打开</span></td>
 		</tr>
 		</tbody>
 	</table>
@@ -72,15 +96,22 @@
 <?php include_once dirname(__FILE__) . '/common-script.html';?>
 
 <div>
-<h3>卸载</h3>
-<form action="" method="post" onsubmit="return confirm('你确定要卸载多说评论插件吗？');">
-	<input type="hidden" name="action" value="duoshuo_uninstall" />
-	<p class="submit"><input type="submit" class="button" value="卸载" name="duoshuo_uninstall" /></p>
+<h3>清空多说站点配置</h3>
+<form action="" method="post" onsubmit="return confirm('你确定要清空多说站点配置吗？');">
+	<input type="hidden" name="action" value="duoshuo_reset" />
+	<p>如果你希望本博客和其他多说站点进行绑定，或者创建新的多说站点，点此 <input type="submit" class="button" value="清空配置" name="duoshuo_reset" /></p>
 </form>
 </div>
 
+<h3>常见问题和参考链接</h3>
+<ul>
+	<li><a href="http://dev.duoshuo.com/docs/513b65c57c33a8320d003335" target="_blank">我的主题模板是自己开发的，启用多说之后评论框没有被替换怎么办？</a></li>
+	<li><a href="http://dev.duoshuo.com/docs/50d7ecc6b2dcd51d2f0002e7" target="_blank">多说WordPress插件常见问题</a></li>
+</ul>
+
 <h3>意见反馈</h3>
-<p>你的意见是多说成长的原动力，<a href="http://dev.duoshuo.com/discussion" target="_blank">欢迎给我们留言</a>，或许你想要的功能下一个版本就会实现哦！</p>
+<p>你的意见是多说成长的原动力，<a href="http://dev.duoshuo.com/wordpress-plugin" target="_blank">欢迎给我们留言</a>，或许你想要的功能下一个版本就会实现哦！</p>
+<p>多说正在招人！如果你相信改变世界不是资本而是技术；如果你不只是想完成任务，还希望你的巧妙构思实现意想不到的好处；如果你希望和跟你一样聪明的人一起工作。<a href="http://dev.duoshuo.com/threads/5138474ea7e92e7b60010bb9" target="_blank">那么你不妨加入我们！</a></p>
 <p>
 	<iframe width="120" height="23" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0" scrolling="no" frameborder="No" border="0" src="http://widget.weibo.com/relationship/followbutton.php?language=zh_cn&width=120&height=24&uid=2468548203&style=2&btn=red&dpc=1"></iframe>
 	<iframe id="previewmc" src="http://follow.v.t.qq.com/index.php?c=follow&a=quick&name=duo-shuo&style=3&t=1327999237149&f=1" allowtransparency="true" style="margin:0 auto;" frameborder="0" height="23" scrolling="no" width="100"></iframe>

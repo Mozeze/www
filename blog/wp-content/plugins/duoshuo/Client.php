@@ -12,15 +12,16 @@ class Duoshuo_Client{
 	var $userAgent;
 	var $shortName;
 	var $secret;
+	var $jwt;
 	var $accessToken;
 	var $http;
 	
-	function __construct($shortName = null, $secret = null, $remoteAuth = null, $accessToken = null){
+	public function __construct($shortName = null, $secret = null, $jwt = null, $accessToken = null){
 		global $wp_version;
 		
 		$this->shortName = $shortName;
 		$this->secret = $secret;
-		$this->remoteAuth = $remoteAuth;
+		$this->jwt = $jwt;
 		$this->accessToken = $accessToken;
 		$this->http = new WP_Http();
 		$this->userAgent = 'WordPress/' . $wp_version . '|Duoshuo/'. Duoshuo_WordPress::VERSION;
@@ -34,10 +35,12 @@ class Duoshuo_Client{
 	 * @throws Duoshuo_Exception
 	 * @return array
 	 */
-	function request($method, $path, $params = array()){
+	public function request($method, $path, $params = array()){
         $params['short_name'] = $this->shortName;
         $params['secret'] = $this->secret;
-		$params['remote_auth'] = $this->remoteAuth;
+        
+        if ($this->jwt)
+			$params['jwt'] = $this->jwt;
         
         if ($this->accessToken)
         	$params['access_token'] = $this->accessToken;
@@ -47,7 +50,7 @@ class Duoshuo_Client{
 		return $this->httpRequest($url, $method, $params);
 	}
 	
-	function httpRequest($url, $method, $params){
+	public function httpRequest($url, $method, $params){
 		$args = array(
 			'method' => $method,
 			'timeout' => 60,
@@ -102,7 +105,7 @@ class Duoshuo_Client{
 	 * @param string $type
 	 * @param array $keys
 	 */
-	function getAccessToken( $type, $keys ) {
+	public function getAccessToken( $type, $keys ) {
 		$params = array(
 			'client_id'	=>	$this->shortName,
 			'client_secret' => $this->secret,

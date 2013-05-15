@@ -41,12 +41,14 @@
                 </div>
                 <div class="navigation">
 					<div class="alignleft">
-					<?php previous_post('&laquo; &laquo; %',
-					 '上一篇: ', 'yes'); ?>
+						<span class="prevnextbutton"> 
+							 <?php previous_post('<span class="arrows">&laquo;</span> %', ' 上一篇: ', 'yes'); ?>
+						</span>  
 					</div>
 					<div class="alignright">
-					<?php next_post('% &raquo; &raquo; ',
-					 '下一篇: ', 'yes'); ?>
+						<span class="prevnextbutton"> 
+							<?php next_post('% <span class="arrows">&raquo;</span>', '下一篇: ', 'yes'); ?> 
+						</span>
 					</div>
 				</div> <!-- end navigation --> 
             </div>

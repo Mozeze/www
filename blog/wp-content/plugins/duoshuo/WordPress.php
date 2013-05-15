@@ -1,7 +1,7 @@
 <?php
 class Duoshuo_WordPress extends Duoshuo_Abstract{
 	
-	const VERSION = '0.9';
+	const VERSION = '1.0';
 	
 	protected static $_instance = null;
 	
@@ -23,23 +23,27 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 	
 	public $secret;
 	
+	protected $_scriptsPrinted = false;
+	
+	protected static $_defaultOptions = array(
+		'duoshuo_debug'					=>	0,
+		'duoshuo_api_hostname'			=>	'api.duoshuo.com',
+		'duoshuo_cron_sync_enabled'		=>	1,
+		'duoshuo_seo_enabled'			=>	1,
+		'duoshuo_postpone_print_scripts'=>	0,
+		'duoshuo_cc_fix'				=>	1,
+		'duoshuo_sync_pingback_and_trackback'=>	0,
+		'duoshuo_social_login_enabled'	=>	1,
+		'duoshuo_comments_wrapper_intro'=>	'',
+		'duoshuo_comments_wrapper_outro'=>	'',
+		'duoshuo_last_log_id'			=>	0,
+	);
+	
 	protected function __construct(){
 		$this->shortName = $this->getOption('short_name');
 		$this->secret = $this->getOption('secret');
 		
-		$defaultOptions = array(
-			'duoshuo_debug'					=>	0,
-			'duoshuo_api_hostname'			=>	'api.duoshuo.com',
-			'duoshuo_cron_sync_enabled'		=>	1,
-			'duoshuo_seo_enabled'			=>	1,
-			'duoshuo_cc_fix'				=>	1,
-			'duoshuo_social_login_enabled'	=>	1,
-			'duoshuo_comments_wrapper_intro'=>	'',
-			'duoshuo_comments_wrapper_outro'=>	'',
-			'duoshuo_last_log_id'			=>	0,
-		);
-		
-		foreach ($defaultOptions as $optionName => $value)
+		foreach (self::$_defaultOptions as $optionName => $value)
 			if (get_option($optionName) === false)
 				update_option($optionName, $value);
 		
@@ -115,6 +119,70 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 			: true;
 	}
 	
+	public function normalizeUrl($url){
+		if (strpos($url, '/') === 0){
+			$siteurl = get_option('siteurl');
+			
+			if (strlen($siteurl) >=8 && (false !== $pos = strpos($siteurl, '/', 8)))
+				$siteurl = substr($siteurl, 0, $pos);
+			
+			return $siteurl . $url;
+		}
+		else{
+			return $url;
+		}
+	}
+	
+	public function setJwtCookie($logged_in_cookie, $expire, $expiration, $user_id, $scheme){
+		$jwt = $this->jwt($user_id);
+		$secure = $scheme == 'secure_auth';
+		$secure_logged_in_cookie = apply_filters('secure_logged_in_cookie', false, $user_id, $secure);
+		
+		// $httponly = false
+		//setcookie('duoshuo_token', $jwt, $expire, PLUGINS_COOKIE_PATH, COOKIE_DOMAIN, $secure, true);
+		setcookie('duoshuo_token', $jwt, $expire, ADMIN_COOKIE_PATH, COOKIE_DOMAIN, $secure);
+		setcookie('duoshuo_token', $jwt, $expire, COOKIEPATH, COOKIE_DOMAIN, $secure_logged_in_cookie);
+		if ( COOKIEPATH != SITECOOKIEPATH )
+			setcookie('duoshuo_token', $jwt, $expire, SITECOOKIEPATH, COOKIE_DOMAIN, $secure_logged_in_cookie);
+		
+		$this->syncUserToRemote($user_id);
+	}
+	
+	public function clearJwtCookie(){
+		// 3.5版本之前没有定义 YEAR_IN_SECONDS
+		//setcookie( 'duoshuo_token',    ' ', time() - 31536000, PLUGINS_COOKIE_PATH, COOKIE_DOMAIN );
+		setcookie( 'duoshuo_token',    ' ', time() - 31536000, ADMIN_COOKIE_PATH,   COOKIE_DOMAIN );
+		setcookie( 'duoshuo_token',    ' ', time() - 31536000, COOKIEPATH,          COOKIE_DOMAIN );
+		
+		if ( COOKIEPATH != SITECOOKIEPATH )
+			setcookie( 'duoshuo_token',    ' ', time() - 31536000, SITECOOKIEPATH,      COOKIE_DOMAIN );
+	}
+	
+	public function oauthConnect(){
+		if (!$this->connected())
+			return ;
+	
+		if (!isset($_GET['code']))
+			return false;
+	
+		try{
+			$keys = array(
+					'code'	=> $_GET['code'],
+					'redirect_uri' => 'http://duoshuo.com/login-callback/',
+			);
+			
+			$token = $this->getClient()->getAccessToken('code', $keys);
+			
+			if ($token['code'] != 0)
+				return false;
+			
+			$this->userLogin($token);
+		}
+		catch(Duoshuo_Exception $e){
+			update_option('duoshuo_connect_failed', time());
+		}
+	}
+	
 	public function userLogin($token){
 		global $wpdb, $error;
 		
@@ -135,16 +203,78 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 			}
 		}
 		else{
-			//	TODO
-			//	如果站点开启注册
-			//	如果站点不开启注册，则把用户带回入口页
-			if (isset($_GET['redirect_to']) && $_GET['redirect_to'] !== admin_url()){
-				wp_redirect($_GET['redirect_to']);
-				exit;
+			if (get_option('users_can_register')){//	如果站点开启注册
+				
+				// 要求用户输入帐号进行绑定
+				$client = new Duoshuo_Client($this->shortName, $this->secret, null, $token['access_token']);
+				$response = $client->request('GET', 'users/profile', array('user_id'=> $token['user_id']));
+				
+				$query = array(
+					'action'			=>	'register',
+					'duoshuo_user_id'	=>	$token['user_id'],
+					'duoshuo_access_token'=>$token['access_token'],
+				);
+				
+				$this->duoshuoUserId = $token['user_id'];
+				
+				$registerUrl = site_url( 'wp-login.php?' . http_build_query($query), 'login' );
+				$error = esc_html($response['response']['name']) . '，请输入你的本站帐号进行帐号绑定；<br />如果你还没有本站帐号，请<a href="' . esc_url($registerUrl) . '">注册</a>';
 			}
-			else{	//如果是从wp-login页面发起的请求，就不触发重定向
-				$error = '你授权的社交帐号没有和本站的用户帐号绑定；<br />如果你是本站注册用户，请先登录之后绑定社交帐号';
+			else{//	如果站点未开启注册
+				//	把用户带回入口页
+				if (isset($_GET['redirect_to']) && $_GET['redirect_to'] !== admin_url()){
+					wp_redirect($_GET['redirect_to']);
+					exit;
+				}
+				else{	//如果是从wp-login页面发起的请求，就不触发重定向
+					$error = '你授权的社交帐号没有和本站的用户帐号绑定；<br />如果你是本站注册用户，请先登录之后绑定社交帐号';
+				}
 			}
+		}
+	}
+	
+	public function bindUser($user_login, $user = null){
+		//	早期版本wp_login接口只有第一个参数
+		if (empty($user)){
+			$user = get_user_by('login', $user_login);
+		}
+		
+		if (isset($_POST['duoshuo_user_id'])){
+			$query = array(
+				'master_user_id'=>	$_POST['duoshuo_user_id'],
+				'jwt'			=>	$this->jwt($user->ID),
+				'redirect_uri'	=>	admin_url(),
+			);
+			
+			wp_redirect('http://duoshuo.com/merge/?'. http_build_query($query, null, '&'));
+			exit;
+		}
+	}
+	
+	public function userRegisterHook($userId){
+		if (!$this->connected())
+			return ;
+		
+		//	WP_User
+		$user = get_user_by('id', $userId);
+		try{
+			if (isset($_POST['user_login']) && isset($_POST['duoshuo_access_token'])){
+				//	已登录多说帐号，且多说帐号并未与本站user_key绑定
+				$client = new Duoshuo_Client($this->shortName, $this->secret, null, $_POST['duoshuo_access_token']);
+				
+				$params = array(
+					'user' => $this->packageUser($user),
+				);
+				$remoteResponse = $client->request('POST', 'sites/join', $params);
+				//	不再需要记录duoshuo_user_id
+			}
+			else{
+				//	未登录多说帐号
+				$this->exportUsers(array($user));
+			}
+		}
+		catch(Duoshuo_Exception $e){
+			update_option('duoshuo_connect_failed', time());
 		}
 	}
 	
@@ -161,16 +291,14 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 	 * @return Duoshuo_Client
 	 */
 	public function getClient($userId = 0){	//如果不输入参数，就是游客
-		$remoteAuth = $this->remoteAuth($this->userData($userId));
-		
 		if ($userId !== null){
 			$accessToken = $this->getUserMeta($userId, 'duoshuo_access_token');
 			
 			if (is_string($accessToken))
-				$client = new Duoshuo_Client($this->shortName, $this->secret, $remoteAuth, $accessToken);
+				$client = new Duoshuo_Client($this->shortName, $this->secret, $this->jwt($userId), $accessToken);
 		}
 		if (!isset($client))
-			$client = new Duoshuo_Client($this->shortName, $this->secret, $remoteAuth);
+			$client = new Duoshuo_Client($this->shortName, $this->secret, $this->jwt($userId));
 		
 		$apiHostname = $this->getOption('api_hostname');
 		if ($apiHostname)
@@ -201,27 +329,28 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 	public function settings(){
 		include dirname(__FILE__) . '/settings.php';
 	}
+	
+	public function statistics(){
+		include dirname(__FILE__) . '/statistics.php';
+	}
 
 	public function profile(){
 		include dirname(__FILE__) . '/profile.php';
 	}
 	
-	public function uninstall(){
+	public function reset(){
 		//delete_option('duoshuo_short_name');
+		
+		// 删除状态有关的值
 		delete_option('duoshuo_secret');
 		delete_option('duoshuo_synchronized');
 		delete_option('duoshuo_connect_failed');
 		delete_option('duoshuo_notice');
-		
-		delete_option('duoshuo_cron_sync_enabled');
-		delete_option('duoshuo_seo_enabled');
-		delete_option('duoshuo_cc_fix');
-		delete_option('duoshuo_social_login_enabled');
-		delete_option('duoshuo_comments_wrapper_intro');
-		delete_option('duoshuo_comments_wrapper_outro');
-		
 		delete_option('duoshuo_sync_lock');
-		delete_option('duoshuo_last_log_id');
+		
+		// 删除所有选项
+		foreach (self::$_defaultOptions as $optionName => $value)
+			delete_option($optionName);
 		
 		// WP 2.9 以后支持这个函数
 		if (function_exists('delete_metadata')){
@@ -232,7 +361,7 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 			delete_metadata('comment', 0, 'duoshuo_post_id', '', true);
 		}
 		
-		$redirect_url = add_query_arg('message', 'uninstalled', admin_url('admin.php?page=duoshuo'));
+		$redirect_url = add_query_arg('message', 'reset', admin_url('admin.php?page=duoshuo'));
 		wp_redirect($redirect_url);
 		exit;
 	}
@@ -241,8 +370,12 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 	 * 关闭默认的评论，避免spammer
 	 */
 	public function commentsOpen($open, $post_id = null) {
-	    if ($this->EMBED || get_post_meta($post_id, 'duoshuo_thread_id', true))
+	    //if ($this->EMBED || get_post_meta($post_id, 'duoshuo_thread_id', true))
+	    //	return false;
+		$script_name = array_pop( split( '/', $_SERVER['PHP_SELF'] ) );
+	    if (preg_match('/wp\-comments\-post\.php$/', $script_name) && get_post_meta($post_id, 'duoshuo_status', true) !== 'disabled')
 	    	return false;
+	    
 	    return $open;
 	}
 	
@@ -252,11 +385,15 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 	    $topPost = $this->topPost($post);
 	    
 	    if ($topPost === null)	//	 可能是inherit 但post_parent=0
-	    	return;
+	    	return $value;
 	    
 	    if ( !( is_singular() && ( have_comments() || 'open' == $topPost->comment_status ) ) ) {
-	        return;
+	        return $value;
 	    }
+	    
+	    if (get_post_meta($topPost->ID, 'duoshuo_status', true) == 'disabled')
+	    	return $value;
+	    
 		/*
 	    if ( !dsq_is_installed() || !dsq_can_replace() ) {
 	        return $value;
@@ -281,10 +418,24 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 	    //	return $value;
 	}
 	
+	public function commentsPopupLinkAttributes($attribs){
+		global $post;
+		
+		$threadKey = $this->threadKey($post);
+		if ($threadKey === null)	//	post_status = inherit, post_parent = 0
+			return $attribs;
+		
+		if (has_filter('comments_number', array($this, 'commentsText')))
+			remove_filter('comments_number', array($this, 'commentsText'));
+		
+		$attribs .= ' class="ds-thread-count" data-thread-key="' . $threadKey .'"';
+		return $attribs;
+	}
+	
 	public function commentsText($comment_text, $number = null){
 	    global $post;
-	    $threadKey = $this->threadKey($post);
 	    
+	    $threadKey = $this->threadKey($post);
 	    if ($threadKey === null)	//	post_status = inherit, post_parent = 0
 	    	return $comment_text;
 	    
@@ -295,6 +446,29 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 		    return "<span $attribs data-replace=\"1\">$comment_text</span>";
 	}
 	
+	public function jwt($userId = null){
+		if ($userId === null)
+			$user = wp_get_current_user();
+		elseif($userId != 0)
+			$user = get_user_by( 'id', $userId);
+		
+		if (empty($user) || !$user->ID)
+			return null;
+		
+		$token = array(
+			'short_name'=>	$this->shortName,
+			'user_key'	=>	$user->ID,
+			'name'		=>	$user->display_name,
+		);
+		
+		return self::encodeJWT($token, $this->secret);
+	}
+	
+	/**
+	 * @deprecated
+	 * @param string|int $userId
+	 * @return mixed
+	 */
 	public function userData($userId = null){	// null 代表当前登录用户，0代表游客
 		if ($userId === null)
 			$current_user = wp_get_current_user();
@@ -326,7 +500,6 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 				'login'=>	site_url('wp-login.php', 'login') .'?action=duoshuo_login',
 				'logout'=>	htmlspecialchars_decode(wp_logout_url(), ENT_QUOTES),
 			),
-			'remote_auth'	=>	$this->remoteAuth($this->userData()),
 		);
 		if (!empty($options))
 			$query['options'] = $options;
@@ -334,34 +507,27 @@ class Duoshuo_WordPress extends Duoshuo_Abstract{
 	}
 	
 	public function appendScripts(){
-		static $once = 0;
-		if ($once ++)
+		if ($this->_scriptsPrinted)
 			return;
+		$this->_scriptsPrinted = true;
 ?>
 <script type="text/javascript">
 var duoshuoQuery = <?php echo json_encode($this->buildQuery());?>;
 duoshuoQuery.sso.login += '&redirect_to=' + encodeURIComponent(window.location.href);
 duoshuoQuery.sso.logout += '&redirect_to=' + encodeURIComponent(window.location.href);
 </script>
+<script type="text/javascript" src="http://static.<?php echo self::DOMAIN;?>/embed.js" charset="UTF-8" async="async"></script>
 <?php 
-		$duoshuo_shortname = 'static';
-		$url = 'http://' . $duoshuo_shortname . '.' . self::DOMAIN . '/embed.js';
-		//?pname=wordpress&pver=' . self::VERSION
-		wp_register_script('duoshuo-embed', $url, array(), null);
-		
-		wp_enqueue_script('duoshuo-embed');
 	}
 	
 	/**
 	 * 在wp_print_scripts 没有执行的时候执行最传统的代码
 	 */
 	public function printScripts(){
-		static $scriptsPrinted = false;
-		
-		if ($scriptsPrinted)
+		if ($this->_scriptsPrinted)
 			return;
-		
-		$duoshuo_shortname = 'static';?>
+		$this->_scriptsPrinted = true;
+		?>
 <script type="text/javascript">
 var duoshuoQuery = <?php echo json_encode($this->buildQuery());?>;
 duoshuoQuery.sso.login += '&redirect_to=' + encodeURIComponent(window.location.href);
@@ -369,31 +535,37 @@ duoshuoQuery.sso.logout += '&redirect_to=' + encodeURIComponent(window.location.
 (function() {
     var ds = document.createElement('script'); ds.type = 'text/javascript'; ds.async = true;
     ds.charset = 'UTF-8';
-    ds.src = 'http://<?php echo $duoshuo_shortname;?>.duoshuo.com/embed.js';
+    ds.src = 'http://static.duoshuo.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
 })();
 </script><?php
-		$scriptsPrinted = true;
 	}
 	
-	public function outputFooterCommentJs() {
-		if (!did_action('wp_head'))
-			$this->printScripts();
-		/** 不再替换原生最新评论widget
-		<script type="text/javascript">
-			DUOSHUO.RecentComments('.widget_recent_comments #recentcomments', {template : 'wordpress'});
-		</script>
-		 */
-	}
+	/** 不再替换原生最新评论widget
+	<script type="text/javascript">
+		DUOSHUO.RecentComments('.widget_recent_comments #recentcomments', {template : 'wordpress'});
+	</script>
+	 */
 	
 	public function loginForm(){
-		$redirectUri = add_query_arg(array('action'=>'duoshuo_login', 'redirect_to'=>urlencode(admin_url())), site_url('wp-login.php', 'login'));?>
+		if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'duoshuo_login' && isset($this->duoshuoUserId)){ // 登录后发现没有本站帐号，输入帐号进行绑定 ?>
+			<input type="hidden" name="duoshuo_user_id" value="<?php echo $this->duoshuoUserId;?>" />
+<?php 
+		}
+		elseif (isset($_REQUEST['duoshuo_access_token'])){ ?>
+			<input type="hidden" name="duoshuo_access_token" value="<?php echo $_REQUEST['duoshuo_access_token'];?>" />
+<?php 
+		}
+		else{
+			$redirectUri = add_query_arg(array('action'=>'duoshuo_login', 'redirect_to'=>urlencode(admin_url())), site_url('wp-login.php', 'login'));?>
 <div class="ds-login" style="height:40px;"></div>
+<?php $this->printScripts();?>
 <script>
 if (window.duoshuoQuery && duoshuoQuery.sso)
 	duoshuoQuery.sso.login = <?php echo json_encode($redirectUri);?>;
 </script>
 <?php
+		}
 	}
 
 	public function connectSite(){
@@ -530,7 +702,7 @@ window.parent.location = <?php echo json_encode(admin_url('admin.php?page=duoshu
 			return ;
 		
 		//	WP_User
-		$userData = get_userdata($userId);
+		$userData = get_user_by('id', $userId);
 		
 		try{
 			$this->exportUsers(array($userData));
@@ -607,6 +779,10 @@ window.parent.location = <?php echo json_encode(admin_url('admin.php?page=duoshu
 				'meta'		=>	json_encode($userData),
 		);
 		
+		$avatar_data = array();
+		if (preg_match('/(src)=((\'|")[^(\'|")]*(\'|"))/i', get_avatar($userData->ID), $avatar_data))
+			$data['avatar_url'] = htmlspecialchars_decode(str_replace(array('"', "'"), '', $avatar_data[2]), ENT_QUOTES);
+		
 		foreach($roleMap as $wpRole => $role)
 			if (isset($capabilities[$wpRole]) && $capabilities[$wpRole]){
 			$data['role'] = $role;
@@ -659,7 +835,7 @@ window.parent.location = <?php echo json_encode(admin_url('admin.php?page=duoshu
 		if (function_exists('get_post_thumbnail_id')){	//	WordPress 2.9开始支持
 			$post_thumbnail_id = get_post_thumbnail_id( $post->ID );
 			if ( $post_thumbnail_id ) {
-				$params['thumbnail'] = wp_get_attachment_url($post_thumbnail_id);
+				$params['thumbnail'] = $this->normalizeUrl(wp_get_attachment_url($post_thumbnail_id));
 				//$image = wp_get_attachment_image_src( $post_thumbnail_id, $size, false);
 				//list($src, $width, $height) = $image;
 				//$meta = wp_get_attachment_metadata($id);
@@ -680,7 +856,7 @@ window.parent.location = <?php echo json_encode(admin_url('admin.php?page=duoshu
 		$children = get_children($args);
 		if (is_array($children))
 			foreach($children as $attachment)
-				$images[] = wp_get_attachment_url($attachment->ID);
+				$images[] = $this->normalizeUrl(wp_get_attachment_url($attachment->ID));
 		if (!empty($images))
 			$params['images'] = json_encode($images);
 		
@@ -898,8 +1074,8 @@ window.parent.location = <?php echo json_encode(admin_url('admin.php?page=duoshu
 		}
 		
 		$messages = array(
-			'registered'	=>'<strong>注册成功，请同步数据</strong>',
-			'uninstalled'	=>'<strong>已卸载</strong>',
+			'registered'=>'<strong>注册成功，请同步数据</strong>',
+			'reset'		=>'<strong>已重置</strong>',
 		);
 		if (isset($_GET['message']) && isset($messages[$_GET['message']]))
 			echo '<div class="updated"><p>'.$messages[$_GET['message']].'</p></div>';
@@ -946,13 +1122,13 @@ window.parent.location = <?php echo json_encode(admin_url('admin.php?page=duoshu
 		$query = array(
 			'callback'	=>	'getSyncOptionsCallback',
 			//'require'	=>	'site,visitor,serverTime',
-			'remote_auth'=>	$this->remoteAuth($this->userData()),
+			'jwt'		=>	$this->jwt(),
 		);
 
 		if ($post->ID)
 			$query['thread_key'] = $post->ID;
 
-		$jsonpUrl = 'http://' . $this->shortName . '.duoshuo.com/api/users/syncOptions.jsonp?' . http_build_query($query);
+		$jsonpUrl = 'http://' . $this->shortName . '.duoshuo.com/api/users/syncOptions.jsonp?' . http_build_query($query, null, '&');
 		?>
 <script>
 function getSyncOptionsCallback(rsp){
@@ -1007,6 +1183,21 @@ function getSyncOptionsCallback(rsp){
 })();
 </script>
 		<?php 
+	}
+	
+	public function commentStatusMetaBoxOptions($post){?>
+		<br /><input name="duoshuo_status" type="hidden" value="enabled" />
+		<label for="duoshuo_status" class="selectit"><input name="duoshuo_status" type="checkbox" id="duoshuo_status" value="disabled" <?php checked(get_post_meta($post->ID, 'duoshuo_status', true), 'disabled'); ?> /> <?php _e( '这个页面不启用多说评论框' ); ?></label>
+	<?php 
+	}
+	
+	public function savePostDuoshuoStatus($postId){
+		if (isset($_POST['duoshuo_status'])){
+			if ($_POST['duoshuo_status'] == 'disabled')
+				update_post_meta($postId, 'duoshuo_status', 'disabled');
+			else
+				delete_post_meta($postId, 'duoshuo_status');
+		}
 	}
 	
 	public function managePostComments($post){
@@ -1091,15 +1282,20 @@ function getSyncOptionsCallback(rsp){
 		echo '<input id="comments-number" name="widget-duoshuo[items]" type="text" value="' . $number . '" size="3" /></p>';
 	}
 	
+	public function registerSettings(){
+		register_setting('duoshuo', 'duoshuo_short_name');
+		register_setting('duoshuo', 'duoshuo_secret');
+	
+		foreach (self::$_defaultOptions as $optionName => $value)
+			register_setting('duoshuo', $optionName);
+	}
+	
 	public function updateLocalOptions(){
-		if (isset($_POST['duoshuo_api_hostname']))
-			update_option('duoshuo_api_hostname', $_POST['duoshuo_api_hostname']);
-		update_option('duoshuo_debug', isset($_POST['duoshuo_debug']) ? 1 : 0);
-		update_option('duoshuo_cron_sync_enabled', isset($_POST['duoshuo_cron_sync_enabled']) ? 1 : 0);
-		update_option('duoshuo_seo_enabled', isset($_POST['duoshuo_seo_enabled']) ? 1 : 0);
-		update_option('duoshuo_cc_fix', isset($_POST['duoshuo_cc_fix']) ? 1 : 0);
-		update_option('duoshuo_social_login_enabled', isset($_POST['duoshuo_social_login_enabled']) ? 1 : 0);
-		update_option('duoshuo_comments_wrapper_intro', isset($_POST['duoshuo_comments_wrapper_intro']) ? stripslashes($_POST['duoshuo_comments_wrapper_intro']) : '');
-		update_option('duoshuo_comments_wrapper_outro', isset($_POST['duoshuo_comments_wrapper_outro']) ? stripslashes($_POST['duoshuo_comments_wrapper_outro']) : '');
+		foreach (self::$_defaultOptions as $optionName => $value)
+			if (isset($_POST[$optionName]))
+				update_option($optionName, stripslashes($_POST[$optionName]));
+
+		//stripslashes($_POST['duoshuo_comments_wrapper_intro'])
+		//stripslashes($_POST['duoshuo_comments_wrapper_outro'])
 	}
 }

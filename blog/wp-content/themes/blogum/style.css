@@ -53,6 +53,7 @@ body {font: 62.5% Helvetica, Arial, Helvetica, sans-serif; color: #000;}
 .linkImgMoze {float: left;margin-left: -20px;z-index: 1;}
 .linkImgFish {float: left;margin-left: -35px;z-index:-1;}
 .share {width: 225px; float: right;}
+.share a{width: 225px; float: none;}
 .share img {
 	margin-left: 14px;
 	margin-top : 15px;
@@ -235,3 +236,44 @@ body {font: 62.5% Helvetica, Arial, Helvetica, sans-serif; color: #000;}
 .footer a:hover {border-color: #000;}
 .copy {float: left;}
 .credits {float: right;}
+
+/***  上一页, 下一页样式  ***/
+/*Button Style*/
+.prevnextbutton {
+    float:left;
+    height:auto;
+    font:76%/150% "Lucida Grande", Geneva, 
+    Verdana, Arial, Helvetica, sans-serif;
+    text-align:center;
+    white-space:nowrap;
+}
+/*Button Arrow Styles*/
+.prevnextarrows {
+    font-size:90%;
+    margin:0.2em;
+}
+/*Button link styles*/
+.prevnextbutton a:link, .button a:visited {
+    color: #eee;
+    background-color:#1e5184;
+    font-size:1em;
+    font-weight:bolder;
+    text-decoration: none;
+    border-bottom:0.1em solid #555;
+    border-right:0.1em solid #555;
+    border-top:0.1em solid #ccc;
+    border-left:0.1em solid #ccc;
+    margin: 0.2em;
+    padding:0.2em;
+    display:block;
+}
+.prevnextbutton a:hover {
+    background-color:#003366;
+    color:#999;
+    border-top:0.1em solid #777;
+    border-left:0.1em solid #777;
+    border-bottom:0.1em solid #aaa;
+    border-right:0.1em solid #aaa;
+    padding:0.2em;
+    margin: 0.2em;
+}

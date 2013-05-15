@@ -4,7 +4,7 @@ Plugin Name: 多说
 Plugin URI: http://wordpress.org/extend/plugins/duoshuo/
 Description: 追求最佳用户体验的社会化评论框，为中小网站提供“新浪微博、QQ、人人、豆瓣等多帐号登录并评论”功能。“多说”帮你搭建更活跃，互动性更强的评论平台，功能强大且永久免费。
 Author: 多说网
-Version: 0.9
+Version: 1.0
 Author URI: http://duoshuo.com/
 */
 
@@ -56,7 +56,7 @@ if ($transport === false){
 
 if (!extension_loaded('json'))
 	include DUOSHUO_PLUGIN_PATH . '/compat-json.php';
-	
+
 require DUOSHUO_PLUGIN_PATH . '/Exception.php';
 require DUOSHUO_PLUGIN_PATH . '/Client.php';
 require DUOSHUO_PLUGIN_PATH . '/Abstract.php';
@@ -104,8 +104,7 @@ function duoshuo_admin_initialize(){
 		add_meta_box('duoshuo-comments', '来自社交网站的评论(多说)', array($duoshuoPlugin,'managePostComments'), 'post', 'normal', 'low');
 	 */
 	
-	add_action('profile_update', array($duoshuoPlugin, 'syncUserToRemote'));
-	add_action('user_register', array($duoshuoPlugin, 'syncUserToRemote'));
+	add_action('post_comment_status_meta_box-options', array($duoshuoPlugin, 'commentStatusMetaBoxOptions'));
 	
 	add_action('wp_dashboard_setup', 'duoshuo_add_dashboard_widget');
 	
@@ -146,26 +145,26 @@ function duoshuo_initialize(){
 		return;
 	}
 	
-	if ($duoshuoPlugin->getOption('social_login_enabled'))
+	if ($duoshuoPlugin->getOption('social_login_enabled')){
 		add_action('login_form', array($duoshuoPlugin, 'loginForm'));
-	//add_action('wp_login', array($duoshuoPlugin, 'login'));
+		add_action('register_form', array($duoshuoPlugin, 'loginForm'));
+	}
 	
 	// wp2.8 以后支持这个事件
-	add_action('wp_print_scripts', array($duoshuoPlugin, 'appendScripts'));
-	//add_action('wp_head', array($duoshuoPlugin, 'appendStyles'));
+	add_action(get_option('duoshuo_postpone_print_scripts') ? 'wp_print_footer_scripts' : 'wp_print_scripts', array($duoshuoPlugin, 'appendScripts'));
 	
 	//以下应该根据是否设置，选择是否启用
 	add_filter('comments_template', array($duoshuoPlugin,'commentsTemplate'));
 	
-	//add_filter('comments_number')
-	if (is_active_widget(false, false, 'recent-comments'))
-		add_action('wp_footer', array($duoshuoPlugin, 'outputFooterCommentJs'));
-	
-	if (get_option('duoshuo_cc_fix')) //直接输出HTML评论
+	if (get_option('duoshuo_cc_fix')){ //直接输出HTML评论
+		add_filter('comments_popup_link_attributes', array($duoshuoPlugin, 'commentsPopupLinkAttributes'));
 		add_filter('comments_number', array($duoshuoPlugin, 'commentsText'));
-		
-	add_action('trackback_post', array($duoshuoPlugin, 'exportOneComment'));
-	add_action('pingback_post', array($duoshuoPlugin, 'exportOneComment'));
+	}
+	
+	if (get_option('duoshuo_sync_pingback_and_trackback')){
+		add_action('trackback_post', array($duoshuoPlugin, 'exportOneComment'));
+		add_action('pingback_post', array($duoshuoPlugin, 'exportOneComment'));
+	}
 	
 	duoshuo_common_initialize();
 }
@@ -174,7 +173,13 @@ function duoshuo_common_initialize(){
 	global $duoshuoPlugin;
 	// 没有用cookie方式保持身份，所以不需要重定向
 	//add_action('wp_logout', array($duoshuoPlugin, 'logout'));
-	add_filter('comments_open', array($duoshuoPlugin, 'commentsOpen'));
+	add_filter('comments_open', array($duoshuoPlugin, 'commentsOpen'), 10, 2);
+	add_action('set_auth_cookie', array($duoshuoPlugin, 'setJwtCookie'), 10, 5);
+	add_action('clear_auth_cookie', array($duoshuoPlugin, 'clearJwtCookie'));
+	
+	add_action('profile_update', array($duoshuoPlugin, 'syncUserToRemote'));
+	add_action('user_register', array($duoshuoPlugin, 'userRegisterHook'));
+	add_action('wp_login', array($duoshuoPlugin, 'bindUser'), 10, 2);
 	
 	if ($duoshuoPlugin->getOption('cron_sync_enabled')){
 		add_action('duoshuo_sync_log_cron', array($duoshuoPlugin, 'syncLog'));
@@ -258,6 +263,14 @@ function duoshuo_add_pages() {
 		    );
 		    add_submenu_page(
 		         'duoshuo',//$parent_slug
+		         '数据统计',//page_title
+		         '数据统计',//menu_title
+		         'manage_options',//权限
+		         'duoshuo-statistics',//menu_slug
+		         array($duoshuoPlugin, 'statistics')//function
+		    );
+		    add_submenu_page(
+		         'duoshuo',//$parent_slug
 		         '我的多说帐号',//page_title
 		         '我的多说帐号',//menu_title
 		         'level_0',//权限
@@ -284,27 +297,14 @@ function duoshuo_add_dashboard_widget(){
 	wp_add_dashboard_widget('dashboard_duoshuo', '多说最新评论', array($duoshuoPlugin, 'dashboardWidget'), array($duoshuoPlugin, 'dashboardWidgetControl'));
 }
 
-function duoshuo_register_settings(){
-	register_setting('duoshuo', 'duoshuo_short_name');
-	register_setting('duoshuo', 'duoshuo_secret');
-	
-	register_setting('duoshuo', 'duoshuo_api_hostname');
-	register_setting('duoshuo', 'duoshuo_cron_sync_enabled');
-	register_setting('duoshuo', 'duoshuo_seo_enabled');
-	register_setting('duoshuo', 'duoshuo_cc_fix');
-	register_setting('duoshuo', 'duoshuo_social_login_enabled');
-	register_setting('duoshuo', 'duoshuo_comments_wrapper_intro');
-	register_setting('duoshuo', 'duoshuo_comments_wrapper_outro');
-}
-
 function duoshuo_request_handler(){
 	global $duoshuoPlugin, $parent_file;
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		switch ($parent_file){
 			case 'duoshuo':
-				if (isset($_POST['duoshuo_uninstall']))
-					$duoshuoPlugin->uninstall();
+				if (isset($_POST['duoshuo_reset']))
+					$duoshuoPlugin->reset();
 				if (isset($_POST['duoshuo_local_options']))
 					$duoshuoPlugin->updateLocalOptions();
 				break;
@@ -338,7 +338,7 @@ if(is_admin()){//在admin界面内执行的action
 	register_deactivation_hook(__FILE__, 'duoshuo_deactivate');
 	add_action('admin_menu', 'duoshuo_add_pages', 10);
 	add_action('admin_init', 'duoshuo_request_handler');
-	add_action('admin_init', 'duoshuo_register_settings');
+	add_action('admin_init', array($duoshuoPlugin, 'registerSettings'));
 	add_action('admin_init', 'duoshuo_admin_initialize');
 }
 else{
@@ -349,7 +349,8 @@ else{
 
 add_action('widgets_init', 'duoshuo_register_widgets');
 
-add_action('save_post', array($duoshuoPlugin, 'syncPostToRemote'));
+add_action('save_post', array($duoshuoPlugin, 'savePostDuoshuoStatus'));
+add_action('save_post', array($duoshuoPlugin, 'syncPostToRemote'), 10, 2);
 
 /*
 if (function_exists('get_post_types')){	//	cron jobs runs in common mode, sometimes

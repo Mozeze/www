@@ -66,11 +66,11 @@
                 <?php wp_nav_menu(array('menu' => 'Header', 'theme_location' => 'Header', 'depth' => 1, 'container_class' => 'menu')); ?>
 
                 <div class="share">
-					<img alt="Flicker" title="Flicker" src="/images/index/flicker.png">
-					<img alt="DouBan" title="DouBan" src="/images/index/douban.png">
-					<img alt="WeiXin" title="WeiXin" src="/images/index/weixin.png">
-					<img alt="MeiKong" title="Meikong" src="/images/index/meikong.png">
-					<img alt="WeiBo" title="WeiBo" src="/images/index/weibo.png">
+                	<a href="http://www.flickr.com/photos/soleekiss/" target="_brank"><img alt="Flicker" title="Flicker" src="<?php bloginfo('template_url'); ?>/common/images/index/flicker.png"></a>
+					<a href="http://www.douban.com/people/omoze/" target="_brank"><img alt="豆瓣" title="豆瓣" src="<?php bloginfo('template_url'); ?>/common/images/index/douban.png"></a>
+					<a href="javascript:;"><img alt="WeiXin" title="WeiXin" src="<?php bloginfo('template_url'); ?>/common/images/index/weixin.png"></a>
+					<a href="javascript:;"><img alt="MeiKong" title="Meikong" src="<?php bloginfo('template_url'); ?>/common/images/index/meikong.png"></a>
+					<a href="http://weibo.com/soleekiss" target="_brank"><img alt="WeiBo" title="围脖" src="<?php bloginfo('template_url'); ?>/common/images/index/weibo.png"></a>
 				</div>
                 
             </div>

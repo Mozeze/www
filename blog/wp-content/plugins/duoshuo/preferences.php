@@ -1,10 +1,9 @@
 <link rel="stylesheet" href="<?php echo $this->pluginDirUrl; ?>styles.css" type="text/css" />
 <?php
 $params = array(
-	//'template'		=>	'wordpress',
-	'remote_auth'	=>	$this->remoteAuth($this->userData()),
+	'jwt'	=>	$this->jwt(),
 );
-$adminUrl = 'http://' . $this->shortName . '.' . self::DOMAIN . '/admin/settings/?' . http_build_query($params);
+$adminUrl = 'http://' . $this->shortName . '.' . self::DOMAIN . '/admin/settings/?' . http_build_query($params, null, '&');
 ?>
 <div class="wrap">
 <?php screen_icon(); ?>

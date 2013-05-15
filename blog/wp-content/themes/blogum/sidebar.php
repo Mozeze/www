@@ -11,6 +11,7 @@
 				<div>弥白清欢 茉泽如夏</div>
 				<div>摄影师/插画师: soleekiss</div>
 				<div>e-Mail: soleekiss@gmail.com</div>
+				<div><a href="http://www.x-woods.com/service/book/x.aspx?id=203659" target="_brank">袖子</a></div>
 			</div>
     </div>
     

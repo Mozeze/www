@@ -12,7 +12,9 @@
                 </div>
             </div>
             <div class="post_content">
+                
                 <?php the_content(false); ?>
+				
                 <a href="<?php the_permalink() ?>#more" class="more">Read More >></a>
             </div>
         </div>
